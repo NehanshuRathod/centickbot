@@ -1,3 +1,12 @@
+# 6 dec 2025
+- scripted readers for bot. This utility will read files, data retrieved from files via this reader will be embedded
+- normalised data to be veoctorised
+- csv to string list
+- `PyPDF2` used ot parse pdf
+- csv, txt, pdf can be used.
+- `readers\csvreader.py` `readers\txtreader.py` `reader\pdfreader` 
+
+
 # 5th Dec 2025
 
 - Scrapped using selenuim.immented `faq_scraper.py` to gather info, like FAQs.
@@ -15,6 +24,4 @@
 
 - Build an MVP type system arctitecture
 
-![CentickBOTv1](https://raw.githubusercontent.com/jyotraval/wakeupbowl/refs/heads/main/PRD_approch\CentickBOTv1.png)
-
-![CentickBOTv1](PRD_approch\CentickBOTv1.png)
+![CentickBOTv1](https://raw.githubusercontent.com/jyotraval/centickbot/refs/heads/main/PRD_approch/CentickBOTv1.png)

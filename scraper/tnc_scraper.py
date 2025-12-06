@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 # Configuration
 url = 'https://centraltickets.co.uk/terms'
-output_filename = 'data/tnc.csv'
+output_filename = 'data\\tnc.csv'
 
 def scrape_live_tnc():
     print("Setting up Chrome driver...")
@@ -81,13 +81,15 @@ def scrape_live_tnc():
                                 bullet_texts = []
                                 for b in bullets:
                                     b_text = b.get_text(" ", strip=True)
-                                    bullet_texts.append(f"• {b_text}")
+                                    bullet_texts.append(f",{b_text}")
                                 
                                 # Append bullet points to the paragraph text, separated by a newline
                                 if bullet_texts:
                                     paragraph_text += "\n\n" + "\n".join(bullet_texts)
 
                             if paragraph_text:
+                                paragraph_text.replace('•','')
+                                paragraph_text.strip()
                                 tnc_data.append([section_title, paragraph_text])
 
             

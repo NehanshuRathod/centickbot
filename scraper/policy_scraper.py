@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 
 # Configuration
 url = 'https://centraltickets.co.uk/privacy'
-output_filename = 'data/policy.csv'
+output_filename = 'data\\policy.csv'
 
 def policy_scrape():
     print("Setting up Chrome driver...")
@@ -92,7 +92,7 @@ def policy_scrape():
 
                                 # If it's an unordered list (ul), add a bullet marker for clarity in CSV
                                 if element.name == 'ul':
-                                    clause_text = "• " + clause_text
+                                    clause_text = clause_text
                                     
                                 policy_data.append([section_title, clause_text])
                             

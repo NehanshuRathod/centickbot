@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 
 # URL to scrape
 URL = "https://centraltickets.co.uk/faq"
-OUTPUT_FILE = "data/faqs.csv"
+OUTPUT_FILE = "data\\faqs.csv"
 
 def scrape_live_website():
     print("Setting up the browser...")
