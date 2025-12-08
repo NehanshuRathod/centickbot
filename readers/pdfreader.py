@@ -26,32 +26,40 @@ from PyPDF2 import PdfReader
 # print(chunks[2])
 
 
-import tiktoken
+# import tiktoken
+from PyPDF2 import PdfReader
+import os
 
 
-def getchunks(pdf_path, model="all-MiniLM-L6-v2", chunk_size=500, overlap=200):
+def clean_text(t):
+    if not t:
+        return ""
+    t = t.replace("\n", " ").replace("\t", " ")
+    return " ".join(t.split())
+
+def getpdfchunks(pdf_path, chunk_size=150, overlap=50):
     reader = PdfReader(pdf_path)
     full_text = "".join([page.extract_text() or "" for page in reader.pages])
-    full_text = full_text.replace("\n", " ")
+    full_text = clean_text(full_text)
 
-
-
-    encoding = tiktoken.encoding_for_model(model)
-    tokens = encoding.encode(full_text)
-    
+    words = full_text.split()
     chunks = []
     start = 0
-    while start < len(tokens): # slingind window approch
+    base = os.path.splitext(os.path.basename(pdf_path))[0]
+    counter = 1
+
+    while start < len(words):
         end = start + chunk_size
-        chunk_tokens = tokens[start:end]
-        chunk_text = encoding.decode(chunk_tokens)
-        chunks.append(chunk_text)
-        start += chunk_size - overlap 
-    
+        chunk_text = " ".join(words[start:end])
+        chunks.append({"_id": f"{base}_{counter}", "text": chunk_text})
+        counter += 1
+        start += chunk_size - overlap
+
     return chunks
 
+
 # pdf_path = "data\\dummyearth.pdf"
-# chunks = getchunks(pdf_path,model="text-embedding-3-small", chunk_size=300, overlap=100)
+# chunks = getpdfchunks(pdf_path, chunk_size=150, overlap=50)
 
 # print(f"Created {len(chunks)} chunks")
 # print(chunks[0] ,chunks[1] ,chunks[2], sep='\n\n')

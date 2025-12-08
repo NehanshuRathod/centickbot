@@ -1,3 +1,4 @@
+import os
 import csv
 
 def clean_text(s):
@@ -11,33 +12,44 @@ def clean_text(s):
 
     return " ".join(s.split())
 
+def getcsvdata(csv_file_path):
+    data = []
 
-def csvtodict(csv_file_path):
-    pairs = []
+    # filename without extension
+    base = os.path.splitext(os.path.basename(csv_file_path))[0]
 
     with open(csv_file_path, mode="r", encoding="utf-8") as file:
         reader = csv.DictReader(file)
 
-        for row in reader:
-            cleaned_row = {k: clean_text(v) for k, v in row.items()}
-            # data.append([k + clean_text(v) for k, v in row.items()])
-            pairs.append(cleaned_row)
-    
-    return pairs
+        for idx, row in enumerate(reader, start=1):
+            # Clean all values
+            cleaned_values = [clean_text(v) for v in row.values()]
+            # print(cleaned_values)
 
-def getcsvdata(csv_file_path):
-    pairs = csvtodict(csv_file_path)
-    data = []
-    for p in pairs:
-        txt = ''
-        for val in p.values():
-            txt+= val + ' '
-        data.append(txt.strip())
+            # Combine into one text string
+            if 'faq' in base:
+                text = cleaned_values[1].strip()
+                metadata = cleaned_values[0].strip()
+                entry = {
+                    "_id": f"{base}_{idx}",
+                    "text": text,
+                    "metadata": metadata
+                }
+                
+            else:
+                text = " ".join(cleaned_values).strip()
+                entry = {
+                    "_id": f"{base}_{idx}",
+                    "text": text
+                }
+            data.append(entry)
+
     return data
 
 
-# data = getcsvdata('data\\policy.csv')
-# print(data[:3])
+
+# data = getcsvdata('data\\faqs.csv')
+# # print(data[:3])
 # for i in data[:3]:
 #     print(i,end='\n\n')
 
