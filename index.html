@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Chatbot Demo</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 16px;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+    }
+    #chat-box {
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 12px;
+      height: 400px;
+      overflow-y: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 12px;
+    }
+    .msg {
+      margin: 6px 0;
+      padding: 8px 10px;
+      border-radius: 6px;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+    .user-msg {
+      background: #007bff;
+      color: white;
+      margin-left: auto;
+      text-align: right;
+    }
+    .bot-msg {
+      background: #e9ecef;
+      color: #212529;
+      margin-right: auto;
+      text-align: left;
+    }
+    .error-msg {
+      background: #ffc9c9;
+      color: #c92a2a;
+      margin-right: auto;
+      text-align: left;
+    }
+    #input-row {
+      display: flex;
+      gap: 8px;
+    }
+    #user-input {
+      flex: 1;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    #send-btn {
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: none;
+      background: #007bff;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #send-btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <h1>Chatbot</h1>
+
+  <div id="chat-box"></div>
+
+  <div id="input-row">
+    <input id="user-input" type="text" placeholder="Type your message..." />
+    <button id="send-btn">Send</button>
+  </div>
+
+  <script>
+    const API_URL = "http://127.0.0.1:8000/chat";
+
+    // If later your partner adds API key auth, they can put it here:
+    const API_KEY = ""; // e.g. "cc306b97..."  (for now leave empty)
+
+    let history = [];
+
+    function addMessage(sender, text, type = "normal") {
+      const box = document.getElementById("chat-box");
+      const div = document.createElement("div");
+      div.classList.add("msg");
+
+      if (type === "error") {
+        div.classList.add("error-msg");
+      } else if (sender === "You") {
+        div.classList.add("user-msg");
+      } else {
+        div.classList.add("bot-msg");
+      }
+
+      div.textContent = `${sender}: ${text}`;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const button = document.getElementById("send-btn");
+      const message = input.value.trim();
+      if (!message) return;
+
+      // show user message in UI
+      addMessage("You", message);
+      history.push({ role: "user", content: message });
+      input.value = "";
+
+      button.disabled = true;
+
+      try {
+        const headers = {
+          "Content-Type": "application/json",
+        };
+        if (API_KEY) {
+          headers["X-API-Key"] = API_KEY;
+        }
+
+        const res = await fetch(API_URL, {
+          method: "POST",
+          headers: headers,
+          body: JSON.stringify({
+            message: message,
+            history: history
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          addMessage("Error", data.detail || "Request failed", "error");
+        } else {
+          addMessage("Bot", data.reply);
+          history.push({ role: "assistant", content: data.reply });
+        }
+      } catch (err) {
+        addMessage("Error", err.message || "Network error", "error");
+      } finally {
+        button.disabled = false;
+        input.focus();
+      }
+    }
+
+    document.getElementById("send-btn").addEventListener("click", sendMessage);
+    document.getElementById("user-input").addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        sendMessage();
+      }
+    });
+  </script>
+</body>
+</html>
