@@ -6,7 +6,7 @@ The MCP server exposes **well-defined tools** that an LLM can call to perform bo
 
 ---
 
-## 🔧 Tasks to Be Completed by Backend / DB Integration 
+## Tasks to Be Completed by Backend / DB Integration 
 
 This MCP server is **structurally complete**.  
 The following tasks are intentionally left pending for database and backend integration.
@@ -41,7 +41,9 @@ Files to work on:
 
 services/
 ├── booking_service.py
+
 ├── refund_service.py
+
 └── support_service.py
 
 
