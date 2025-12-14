@@ -11,7 +11,7 @@ The MCP server exposes **well-defined tools** that an LLM can call to perform bo
 This MCP server is **structurally complete**.  
 The following tasks are intentionally left pending for database and backend integration.
 
-⚠️ **Important:**  
+ **Important:**  
 Do **NOT** modify:
 - Tool names
 - Tool arguments
@@ -22,7 +22,7 @@ Only work inside the `services/` directory.
 
 ---
 
-### ✅ What Is Already Implemented
+###  What Is Already Implemented
 
 - MCP server setup using FastMCP
 - Stable tool contracts for LLM integration
@@ -31,13 +31,18 @@ Only work inside the `services/` directory.
 
 ---
 
-### 🧩 Pending Tasks
+###  Pending Tasks
 
-#### 1️⃣ Database Integration
+#### Database Integration
 
 Implement database connectivity inside the `services/` layer.
 
 Files to work on:
+
+services/
+├── booking_service.py
+├── refund_service.py
+└── support_service.py
 
 
 ## Architecture Overview
